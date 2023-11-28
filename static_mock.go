@@ -3,6 +3,7 @@
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file.
 
+//go:build !cgo
 // +build !cgo
 
 package sqlite3
@@ -16,7 +17,18 @@ import (
 var errorMsg = errors.New("Binary was compiled with 'CGO_ENABLED=0', go-sqlite3 requires cgo to work. This is a stub")
 
 func init() {
-	sql.Register("sqlite3", &SQLiteDriver{})
+	if driverName != "" && !isRegistered(driverName) {
+		sql.Register(driverName, &SQLiteDriver{})
+	}
+}
+
+func isRegistered(name string) bool {
+	for _, v := range sql.Drivers() {
+		if v == name {
+			return true
+		}
+	}
+	return false
 }
 
 type (
