@@ -15,6 +15,7 @@ import (
 )
 
 var errorMsg = errors.New("Binary was compiled with 'CGO_ENABLED=0', go-sqlite3 requires cgo to work. This is a stub")
+var driverName = "sqlite3"
 
 func init() {
 	if driverName != "" && !isRegistered(driverName) {
